@@ -1,0 +1,62 @@
+@extends('layouts.admin')
+
+@section('content')
+    <h2>Crea progetto</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        
+        <div class="mb-3">
+            <label for="title" class="form-label">Nome progetto</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="cover_image" class="form-label">Immagine</label>
+            <input class="form-control" type="file" id="cover_image" name="cover_image">
+        </div>
+
+        <div class="mb-3">
+            <label for="type_id" class="form-label">Tipo di progetto</label>
+            <select class="form-select" id="type_id" name="type_id">
+                <option value="">Seleziona il tipo</option>
+                @foreach ($types as $type)
+                    <option @selected($type->id == old('type_id')) value="{{ $type->id }}">{{ $type->name }}</option>
+                @endforeach
+            </select>
+        <div>
+            <div class="mb-3 mt-4">
+                <h5>Technologies</h5>   
+                @foreach ($technologies as $technology)
+                    <div class="form-check">
+                        <input @checked(in_array($technology->id, old('technologies', []))) class="form-check-input" type="checkbox" name="technologies[]" value="{{ $technology->id }}" id="technologies-{{ $technology->id }}">
+                        <label class="form-check-label" for="technologies-{{ $technology->id }}">
+                        {{ $technology->name }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Nome Cliente</label>
+            <input type="text" class="form-control" id="client_name" name="client_name" value="{{ old('name') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Summary</label>
+            <textarea class="form-control" id="summary" rows="15" name="summary">{{ old('summary') }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Crea</button>
+    </form>
+@endsection
